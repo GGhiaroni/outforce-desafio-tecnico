@@ -61,7 +61,7 @@ docker compose up --build
 ./mvnw verify                # testes + JaCoCo (relatório em target/site/jacoco)
 ```
 
-## 📌 Roadmap
+## Roadmap
 
 Desenvoli o desafio me organizando em milestones, cada uma com suas issues:
 
