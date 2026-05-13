@@ -1,13 +1,13 @@
-package com.outforce.desafio_tenico;
+package com.outforce.coupon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DesafioTenicoApplication {
+public class CouponApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DesafioTenicoApplication.class, args);
+		SpringApplication.run(CouponApiApplication.class, args);
 	}
 
 }

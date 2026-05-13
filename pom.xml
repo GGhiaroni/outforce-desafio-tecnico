@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.outforce</groupId>
-	<artifactId>desafio-tenico</artifactId>
+	<artifactId>desafio-tecnico</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>desafio-tecnico</name>
+	<description>Coupon API — Desafio Técnico Outforce</description>
 	<url/>
 	<licenses>
 		<license/>

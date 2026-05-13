@@ -1,10 +1,10 @@
-package com.outforce.desafio_tenico;
+package com.outforce.coupon;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DesafioTenicoApplicationTests {
+class CouponApiApplicationTests {
 
 	@Test
 	void contextLoads() {
