@@ -1,5 +1,6 @@
 package com.outforce.coupon.core.entities;
 
+import com.outforce.coupon.core.enums.Status;
 import com.outforce.coupon.core.valueobjects.CouponCode;
 import com.outforce.coupon.core.valueobjects.DiscountValue;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +37,7 @@ class CouponTest {
             assertEquals(VALID_DISCOUNT, coupon.getDiscountValue());
             assertEquals(FUTURE_DATE, coupon.getExpirationDate());
             assertFalse(coupon.isPublished());
+            assertFalse(coupon.isRedeemed());
             assertFalse(coupon.isDeleted());
         }
 
@@ -151,6 +154,75 @@ class CouponTest {
                     coupon::delete
             );
             assertEquals("Coupon is already deleted", ex.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("Quando consulta o status derivado")
+    class QuandoConsultaStatusDerivado {
+
+        @Test
+        @DisplayName("Retorna ACTIVE para cupom recém-criado com data futura")
+        void retornaActiveParaCupomRecemCriado() {
+            Coupon coupon = Coupon.create(VALID_CODE, VALID_DESCRIPTION, VALID_DISCOUNT, FUTURE_DATE, false);
+
+            assertEquals(Status.ACTIVE, coupon.getStatus());
+        }
+
+        @Test
+        @DisplayName("Retorna DELETED para cupom soft-deletado")
+        void retornaDeletedParaCupomDeletado() {
+            Coupon coupon = Coupon.create(VALID_CODE, VALID_DESCRIPTION, VALID_DISCOUNT, FUTURE_DATE, false);
+            coupon.delete();
+
+            assertEquals(Status.DELETED, coupon.getStatus());
+        }
+
+        @Test
+        @DisplayName("Retorna EXPIRED quando expirationDate está no passado")
+        void retornaExpiredQuandoExpirationDateEstaNoPassado() {
+            Coupon cupomExpirado = new Coupon(
+                    UUID.randomUUID(),
+                    VALID_CODE,
+                    VALID_DESCRIPTION,
+                    VALID_DISCOUNT,
+                    PAST_DATE,
+                    false,
+                    false,
+                    false
+            );
+
+            assertEquals(Status.EXPIRED, cupomExpirado.getStatus());
+        }
+
+        @Test
+        @DisplayName("Prioriza DELETED sobre EXPIRED quando ambos verdadeiros")
+        void priorizaDeletedSobreExpired() {
+            Coupon cupomExpiradoEDeletado = new Coupon(
+                    UUID.randomUUID(),
+                    VALID_CODE,
+                    VALID_DESCRIPTION,
+                    VALID_DISCOUNT,
+                    PAST_DATE,
+                    false,
+                    false,
+                    true
+            );
+
+            assertEquals(Status.DELETED, cupomExpiradoEDeletado.getStatus());
+        }
+    }
+
+    @Nested
+    @DisplayName("Quando consulta redeemed")
+    class QuandoConsultaRedeemed {
+
+        @Test
+        @DisplayName("Inicializa como false em cupom recém-criado")
+        void inicializaComoFalseEmCupomRecemCriado() {
+            Coupon coupon = Coupon.create(VALID_CODE, VALID_DESCRIPTION, VALID_DISCOUNT, FUTURE_DATE, false);
+
+            assertFalse(coupon.isRedeemed());
         }
     }
 }

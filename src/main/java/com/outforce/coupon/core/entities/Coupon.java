@@ -1,5 +1,6 @@
 package com.outforce.coupon.core.entities;
 
+import com.outforce.coupon.core.enums.Status;
 import com.outforce.coupon.core.valueobjects.CouponCode;
 import com.outforce.coupon.core.valueobjects.DiscountValue;
 
@@ -13,9 +14,10 @@ public class Coupon {
     private final DiscountValue discountValue;
     private final LocalDateTime expirationDate;
     private final boolean published;
+    private final boolean redeemed;
     private boolean deleted;
 
-    public Coupon(UUID id, CouponCode code, String description, DiscountValue discountValue, LocalDateTime expirationDate, boolean published, boolean deleted) {
+    public Coupon(UUID id, CouponCode code, String description, DiscountValue discountValue, LocalDateTime expirationDate, boolean published, boolean redeemed, boolean deleted) {
 
         if (code == null) {
             throw new IllegalArgumentException("Coupon code is required");
@@ -36,6 +38,7 @@ public class Coupon {
         this.discountValue = discountValue;
         this.expirationDate = expirationDate;
         this.published = published;
+        this.redeemed = redeemed;
         this.deleted = deleted;
     }
 
@@ -47,7 +50,7 @@ public class Coupon {
         if (expirationDate != null && expirationDate.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Expiration date cannot be in the past");
         }
-        return new Coupon(null, code, description, discountValue, expirationDate, published, false);
+        return new Coupon(null, code, description, discountValue, expirationDate, published, false, false);
     }
 
     public void delete() {
@@ -55,6 +58,16 @@ public class Coupon {
             throw new IllegalStateException("Coupon is already deleted");
         }
         this.deleted = true;
+    }
+
+    public Status getStatus() {
+        if (deleted) {
+            return Status.DELETED;
+        }
+        if (expirationDate.isBefore(LocalDateTime.now())) {
+            return Status.EXPIRED;
+        }
+        return Status.ACTIVE;
     }
 
     public UUID getId() {
@@ -79,6 +92,10 @@ public class Coupon {
 
     public boolean isPublished() {
         return published;
+    }
+
+    public boolean isRedeemed() {
+        return redeemed;
     }
 
     public boolean isDeleted() {
