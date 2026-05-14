@@ -1,5 +1,7 @@
 package com.outforce.coupon.core.usecases;
 
+import java.util.UUID;
+
 public interface DeleteCouponCase {
-    void execute(Long id);
+    void execute(UUID id);
 }

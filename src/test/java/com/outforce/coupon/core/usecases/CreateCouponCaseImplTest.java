@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.times;
@@ -34,7 +34,7 @@ class CreateCouponCaseImplTest {
                 new CouponCode("ABC123"),
                 "Cupom de teste",
                 new DiscountValue(new BigDecimal("10.00")),
-                LocalDate.now().plusDays(30),
+                LocalDateTime.now().plusDays(30),
                 false
         );
     }
@@ -42,7 +42,6 @@ class CreateCouponCaseImplTest {
     @Test
     @DisplayName("Delega a persistência ao gateway e retorna o cupom salvo")
     void delegaPersistenciaAoGateway() {
-
         Coupon entrada = novoCupomValido();
         Coupon saida = novoCupomValido();
         when(gateway.save(entrada)).thenReturn(saida);
