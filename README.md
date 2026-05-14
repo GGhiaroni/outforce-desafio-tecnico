@@ -1,9 +1,15 @@
 # Coupon API — Desafio Técnico Outforce
 
-[![Java](https://img.shields.io/badge/Java-17-007396?logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/17/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Maven](https://img.shields.io/badge/Maven-Build-C71A36?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
-[![Architecture](https://img.shields.io/badge/Architecture-Clean-blue)]()
+![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
+![H2](https://img.shields.io/badge/H2-Database-0000bb?style=for-the-badge&logo=databricks&logoColor=white)
+![Lombok](https://img.shields.io/badge/Lombok-pink?style=for-the-badge&logo=java&logoColor=white)
+![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white)
+![Mockito](https://img.shields.io/badge/Mockito-78A641?style=for-the-badge&logo=java&logoColor=white)
+![JaCoCo](https://img.shields.io/badge/JaCoCo-brightgreen?style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 
 API REST para gerenciamento de cupons de desconto, desenvolvida como desafio técnico para a **Outforce**.
 
@@ -13,13 +19,13 @@ API que expõe endpoints para cadastro e remoção de cupons, seguindo regras de
 
 ## Decisão de projeto
 
-O projeto adota **Clean Architecture** (também chamada de Hexagonal/Ports & Adapters), com separação rígida entre:
+Optei por **Clean Architecture**, separando:
 
 - **core:** apenas o domínio, regras de negócio encapsuladas em objetos de domínio, use cases e gateways.
 - **infra:** — presentation, gateways de saída, etc.
 - **config:** — beans e demais configurações.
 
-**Observação:** Decidi por Clean Architecture porque as regras de negócio listadas no enunciado (validação do código, valor mínimo de desconto, data de expiração, soft delete) vive dentro do objeto **Coupon** e não no controller, service ou entidade JPA. 
+**Observação:** Decidi por Clean Architecture porque as regras de negócio listadas no enunciado (validação do código, valor mínimo de desconto, data de expiração, soft delete) vivem dentro do objeto **Coupon** e não no controller, service ou entidade JPA. 
 Futuramente, se eu trocar H2 por Postgres, por exemplo, o domínio se manteria intocável.
 
 ## Stack
@@ -28,52 +34,42 @@ Futuramente, se eu trocar H2 por Postgres, por exemplo, o domínio se manteria i
 - Spring Boot 3.5 (Web, Data JPA, Validation)
 - H2 Database in-memory
 - Lombok
-- JUnit 5 + Mockito
-- JaCoCo (cobertura ≥ 80%)
+- JUnit 5 e Mockito
+- JaCoCo
 - Springdoc OpenAPI (Swagger UI)
 - Docker + Docker Compose
 
-## Como rodar
+## Rodar com Docker
 
-### Pré-requisitos
-- Java 17+
-- Maven 3.8+ 
-
-### Localmente
-```bash
-./mvnw spring-boot:run
-```
-
-A aplicação sobe em `http://localhost:8080`.
-
-- **Swagger UI:** http://localhost:8080/swagger-ui.html
-- **Console H2:** http://localhost:8080/h2-console — JDBC URL: `jdbc:h2:mem:coupondb`, user: `sa`, senha em branco
-
-### Via Docker
 ```bash
 docker compose up --build
 ```
 
-## Testes
+API disponível em: http://localhost:8080  
+Swagger UI: http://localhost:8080/swagger-ui.html
 
+## Localmente
 ```bash
-./mvnw test                  # roda os testes
-./mvnw verify                # testes + JaCoCo (relatório em target/site/jacoco)
+./mvnw spring-boot:run
 ```
 
-## Roadmap
+## Rodar os testes
+```bash
+./mvnw test
+```
 
-Desenvoli o desafio me organizando em milestones, cada uma com suas issues:
+## Relatório de cobertura com JaCoCo
+```bash
+./mvnw clean verify
+# Relatório gerado em: target/site/jacoco/index.html
+```
 
-- **S1** — Domínio e regras de negócio
-- **S2** — Use Cases e portas
-- **S3** — Persistência JPA
-- **S4** — Camada Web (REST)
-- **S5** — Swagger / OpenAPI
-- **S6** — Testes de integração e cobertura 80%
-- **S7** — Docker e Docker Compose
-- **S8** — README final e revisão
+## Endpoints
 
+| Método | Rota | Status | Descrição |
+|--------|------|--------|-----------|
+| `POST` | `/coupon` | 201 / 400 | Cria um novo cupom |
+| `DELETE` | `/coupon/{id}` | 204 / 404 / 409 | Soft delete de um cupom |
 
 **Desenvolvido por Gabriel Tiziano**
 
