@@ -35,5 +35,8 @@ public class CouponEntity {
     private boolean published;
 
     @Column(nullable = false)
+    private boolean redeemed;
+
+    @Column(nullable = false)
     private boolean deleted;
 }
