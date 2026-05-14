@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,8 +17,8 @@ class CouponTest {
     private static final CouponCode VALID_CODE = new CouponCode("ABC123");
     private static final String VALID_DESCRIPTION = "Desconto Black Friday";
     private static final DiscountValue VALID_DISCOUNT = new DiscountValue(new BigDecimal("10.0"));
-    private static final LocalDate FUTURE_DATE = LocalDate.now().plusDays(30);
-    private static final LocalDate PAST_DATE = LocalDate.now().minusDays(1);
+    private static final LocalDateTime FUTURE_DATE = LocalDateTime.now().plusDays(30);
+    private static final LocalDateTime PAST_DATE = LocalDateTime.now().minusDays(1);
 
     @Nested
     @DisplayName("Quando criado com dados válidos")
@@ -47,10 +47,10 @@ class CouponTest {
         }
 
         @Test
-        @DisplayName("Aceita data de expiração igual a hoje")
-        void aceitaDataDeExpiracaoHoje() {
+        @DisplayName("Aceita data de expiração no futuro próximo")
+        void aceitaDataDeExpiracaoNoFuturoProximo() {
             assertDoesNotThrow(
-                    () -> Coupon.create(VALID_CODE, VALID_DESCRIPTION, VALID_DISCOUNT, LocalDate.now(), false)
+                    () -> Coupon.create(VALID_CODE, VALID_DESCRIPTION, VALID_DISCOUNT, LocalDateTime.now().plusSeconds(1), false)
             );
         }
     }

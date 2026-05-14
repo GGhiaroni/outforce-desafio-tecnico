@@ -3,18 +3,19 @@ package com.outforce.coupon.core.entities;
 import com.outforce.coupon.core.valueobjects.CouponCode;
 import com.outforce.coupon.core.valueobjects.DiscountValue;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Coupon {
-    private final Long id;
+    private final UUID id;
     private final CouponCode code;
     private final String description;
     private final DiscountValue discountValue;
-    private final LocalDate expirationDate;
+    private final LocalDateTime expirationDate;
     private final boolean published;
     private boolean deleted;
 
-    public Coupon(Long id, CouponCode code, String description, DiscountValue discountValue, LocalDate expirationDate, boolean published, boolean deleted) {
+    public Coupon(UUID id, CouponCode code, String description, DiscountValue discountValue, LocalDateTime expirationDate, boolean published, boolean deleted) {
 
         if (code == null) {
             throw new IllegalArgumentException("Coupon code is required");
@@ -41,9 +42,9 @@ public class Coupon {
     public static Coupon create(CouponCode code,
                                 String description,
                                 DiscountValue discountValue,
-                                LocalDate expirationDate,
+                                LocalDateTime expirationDate,
                                 boolean published) {
-        if (expirationDate != null && expirationDate.isBefore(LocalDate.now())) {
+        if (expirationDate != null && expirationDate.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Expiration date cannot be in the past");
         }
         return new Coupon(null, code, description, discountValue, expirationDate, published, false);
@@ -56,7 +57,7 @@ public class Coupon {
         this.deleted = true;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -72,7 +73,7 @@ public class Coupon {
         return discountValue;
     }
 
-    public LocalDate getExpirationDate() {
+    public LocalDateTime getExpirationDate() {
         return expirationDate;
     }
 

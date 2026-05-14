@@ -15,8 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,7 +43,7 @@ class DeleteCouponCaseImplTest {
                 new CouponCode("ABC123"),
                 "Cupom de teste",
                 new DiscountValue(new BigDecimal("10.00")),
-                LocalDate.now().plusDays(30),
+                LocalDateTime.now().plusDays(30),
                 false
         );
     }
@@ -52,16 +53,15 @@ class DeleteCouponCaseImplTest {
     class QuandoCupomExisteENaoFoiDeletado {
 
         @Test
-        @DisplayName("Busca, aplica delete no dominio e persiste o cupom atualizado")
+        @DisplayName("Busca, aplica delete no domínio e persiste o cupom atualizado")
         void buscaAplicaDeleteEPersiste() {
-            Long id = 1L;
+            UUID id = UUID.randomUUID();
             Coupon cupom = novoCupomValido();
             when(gateway.findById(id)).thenReturn(Optional.of(cupom));
 
             useCase.execute(id);
 
-            assertTrue(cupom.isDeleted(),
-                    "O cupom deve estar marcado como deletado após o use case rodar");
+            assertTrue(cupom.isDeleted());
 
             InOrder inOrder = inOrder(gateway);
             inOrder.verify(gateway).findById(id);
@@ -76,14 +76,17 @@ class DeleteCouponCaseImplTest {
         @Test
         @DisplayName("Lança CouponNotFoundException com a mensagem correta e não persiste nada")
         void lancaCouponNotFoundException() {
-            Long id = 99L;
+            UUID id = UUID.fromString("99999999-9999-9999-9999-999999999999");
             when(gateway.findById(id)).thenReturn(Optional.empty());
 
             CouponNotFoundException ex = assertThrows(
                     CouponNotFoundException.class,
                     () -> useCase.execute(id)
             );
-            assertEquals("Coupon with id 99 not found", ex.getMessage());
+            assertEquals(
+                    "Coupon with id 99999999-9999-9999-9999-999999999999 not found",
+                    ex.getMessage()
+            );
 
             verify(gateway, never()).save(any());
         }
@@ -96,7 +99,7 @@ class DeleteCouponCaseImplTest {
         @Test
         @DisplayName("Propaga IllegalStateException do domínio e não persiste novamente")
         void propagaIllegalStateException() {
-            Long id = 1L;
+            UUID id = UUID.randomUUID();
             Coupon cupomJaDeletado = novoCupomValido();
             cupomJaDeletado.delete();
             when(gateway.findById(id)).thenReturn(Optional.of(cupomJaDeletado));
